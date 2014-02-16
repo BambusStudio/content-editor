@@ -8,12 +8,103 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <title>Content-editor</title>
   <link rel="stylesheet" href="app/css/app.css">
-  <script src="bower_components/modernizr/modernizr.js"></script>
+  <script src="../bower_components/modernizr/modernizr.js"></script>
+  <script src="../bower_components/Sortable/Sortable.js"></script>
+  
 </head>
 <body>
-  <!--[if lt IE 7]>
-    <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
-  <![endif]--> 
-      
+<!--.editor-column*5>.column-content{1.$}+.column-remove-->
+<div id="editor">
+
+    <div class="row-add"></div>
+</div>
+<script>
+    var editor = document.getElementById('editor');
+    var rowsId = 0; 
+    var rows = editor.querySelectorAll('.editor-row');
+    
+    
+    function createRow(){
+        var row = document.createElement('div');
+        var rowHandle = document.createElement('div');
+        var rowAdd = document.createElement('div');
+        var rowRemove = document.createElement('div');
+        row.className = 'editor-row';
+        rowHandle.className = 'row-handle';
+        rowAdd.className = 'column-add';
+        rowRemove.className ='row-remove';
+        row.appendChild(rowHandle);
+        row.appendChild(createCol());
+        row.appendChild(rowAdd);
+        row.appendChild(rowRemove);
+        initColumns(row);
+        return row;
+    }
+    
+    function createCol(size){
+        var col = document.createElement('div');
+        var colContent = document.createElement('div');
+        var colRemove = document.createElement('div');
+        col.className = 'editor-column';
+        colContent.className = 'column-content';
+        colRemove.className = 'column-remove';
+        colContent.innerHTML = Math.round(Math.random()*10);
+        col.appendChild(colContent);
+        col.appendChild(colRemove);
+        return col;
+    }
+    
+    function initColumns(row){
+        new Sortable(row, {
+            group: 'column',
+            draggable: ".editor-column",  
+            ghostClass: "sortable-ghost"
+        });
+    }
+    
+    //add Row;
+    editor.addEventListener('click',function(event){
+        if(event.target.classList.contains('row-add')){
+            event.target.parentElement.insertBefore(createRow(),event.target)
+        }
+    },false);
+    //remove Col;
+    editor.addEventListener('click',function(event){
+        if(event.target.classList.contains('row-remove')){
+            var col = event.target.parentElement;
+            col.parentElement.removeChild(col);
+        }
+        return false;
+    },false);
+    
+    //add Col;
+    editor.addEventListener('click',function(event){
+        if(event.target.classList.contains('column-add')){
+            event.target.parentElement.insertBefore(createCol(),event.target)
+        }
+    },false);
+    //remove Col;
+    editor.addEventListener('click',function(event){
+        if(event.target.classList.contains('column-remove')){
+            var col = event.target.parentElement;
+            col.parentElement.removeChild(col);
+        }
+        return false;
+    },false);
+    
+    
+    function serialize(){
+        
+    }
+    
+    
+    //init rows;
+    new Sortable(editor, {
+        group: "rows",
+        handle: ".row-handle", 
+        draggable: ".editor-row",
+        ghostClass: "sortable-ghost"
+    });
+</script>
 </body>
 </html>

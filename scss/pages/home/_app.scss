@@ -1,0 +1,73 @@
+#editor{
+    border: 1px solid #ccc;
+    width: 100%;
+    padding: 8px;
+    position: relative;
+    .row-handle{
+        position: relative;
+        float: left;
+        width: 20px;
+        background: #eee;
+        height: 100px;
+    }
+    .editor-row{
+        border: 1px solid #ccc; 
+        padding: 8px;
+        width: 100%;
+        margin:  8px 0;
+        @include clearfix;
+        clear: both;
+        position: relative;
+    }
+    .column-remove,.row-remove{
+        position: absolute;
+        &:before{content: '+';}
+        font-size: 30px;
+        top:0;
+        color: red;
+        right: 0;
+        width: 20px;
+        height: 20px;
+        line-height: 20px;
+        text-align: center;
+        transform: rotate(45deg);
+        cursor:pointer; 
+    }
+    .row-add{
+        position: relative;
+        width: 100%;
+        height: 100px;
+        font: 40px/100px arial;
+        text-align: center;
+        &:before{content: '+';}
+        cursor:pointer; 
+        border: 2px dotted #ddd;    
+    }
+    .column-add{ 
+        float: left;
+        position: relative;
+        width: 100px;
+        height: 100px;
+        font: 40px/100px arial;
+        text-align: center;
+        cursor:pointer; 
+        &:before{content: '+';}
+        border: 2px dotted #ddd;
+    }
+    .editor-column{
+        float: left;
+        position: relative;
+        width: 100px;
+        height: 100px;
+        background: #fff8d1;
+        
+        line-height: 84px;
+        text-align: center;
+        border:8px solid white;
+        &.sortable-ghost{
+            background: #fff;
+            color:rgba(0,0,0,.5);
+            border: 8px dashed #ddd;
+        }
+    }
+}
