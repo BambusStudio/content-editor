@@ -1448,6 +1448,14 @@ th.hide-for-touch {
     cursor: pointer; }
     #editor .column-remove:before, #editor .row-remove:before {
       content: '+'; }
+  #editor .column-resize {
+    position: absolute;
+    right: 0;
+    height: 30px;
+    top: 28px;
+    width: 8px;
+    background: green;
+    cursor: e-resize; }
   #editor .row-add {
     position: relative;
     width: 100%;
@@ -1473,7 +1481,7 @@ th.hide-for-touch {
     float: left;
     position: relative;
     width: 100px;
-    height: 100px;
+    height: 100/12%;
     background: #fff8d1;
     line-height: 84px;
     text-align: center;

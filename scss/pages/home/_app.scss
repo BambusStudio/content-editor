@@ -33,6 +33,15 @@
         transform: rotate(45deg);
         cursor:pointer; 
     }
+    .column-resize{
+        position: absolute;
+        right: 0;
+        height: 30px;
+        top: 28px;
+        width: 8px;
+        background: green;
+        cursor: e-resize
+    }
     .row-add{
         position: relative;
         width: 100%;
@@ -58,7 +67,7 @@
         float: left;
         position: relative;
         width: 100px;
-        height: 100px;
+        height: 100/12%;
         background: #fff8d1;
         
         line-height: 84px;
