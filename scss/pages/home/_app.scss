@@ -66,17 +66,22 @@
     .editor-column{
         float: left;
         position: relative;
-        width: 100px;
-        height: 100/12%;
-        background: #fff8d1;
+        padding: 8px;
+        width: #{100 / 12 * 1%};
         
-        line-height: 84px;
-        text-align: center;
-        border:8px solid white;
+        
+        .column-content{
+            position: relative;
+            height: 100px;
+            background: #fff8d1;
+            line-height: 84px;
+            text-align: center;
+        }
         &.sortable-ghost{
             background: #fff;
             color:rgba(0,0,0,.5);
-            border: 8px dashed #ddd;
+            padding: 6px;
+            border: 2px dashed #ddd;
         }
     }
 }
