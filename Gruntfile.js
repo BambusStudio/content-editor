@@ -67,7 +67,7 @@ module.exports = function(grunt) {
             ]
         },
         options: {
-            //host: "192.168.0.15",
+        //host: "192.168.0.15",
             reloadFileTypes: ['php', 'html', 'js', 'erb', 'svg'],
             injectFileTypes: ['css', 'png', 'jpg', 'svg', 'gif'],
             watchTask: true,

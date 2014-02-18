@@ -15,7 +15,6 @@
 <body>
 <!--.editor-column*5>.column-content{1.$}+.column-remove-->
 <div id="editor">
-
     <div class="row-add"></div>
 </div>
 <script>
@@ -33,7 +32,7 @@
         rowRemove.className ='row-remove';
         row.appendChild(rowHandle);
         row.appendChild(createCol());
-        row.appendChild(rowAdd);
+        row.appendChild(rowAdd); 
         row.appendChild(rowRemove); 
         initColumns(row);
         return row;
@@ -49,7 +48,7 @@
         colContent.setAttribute('contenteditable','true');
         colRemove.className = 'column-remove';
         colResize.className = 'column-resize';
-        colContent.innerHTML = Math.round(Math.random()*10);
+        colContent.innerHTML = 'asfasdfasdfasd';
         col.appendChild(colContent);
         col.appendChild(colResize);
         col.appendChild(colRemove);
@@ -82,6 +81,7 @@
         console.log(contentSerialized)
     }
     
+
     //  add listners
     editor.addEventListener('click',function(event){
         //add Row;
@@ -110,12 +110,13 @@
         if(event.target.classList.contains('column-resize')){
             var startPoint = event.clientX;
             var step = editor.querySelector('.editor-row').clientWidth/12;
-            var startWidth = target.clientWidth;//border fix
+            var startWidth = Number(target.dataset.size||1);
+            var rigthSide = target.getClientRects()[0].right;
+            console.log(rigthSide)
             var resizer = function(event){
                 //return with limited to inverted size of targetso it can't be scaled in negaivesize. 
-                //Set step to 50px
-                var additinalSize = Math.max(startWidth*-1,Math.round((event.clientX-startPoint)/step)*step);
-                target.style.width = startWidth+additinalSize+'px';
+                var additinalSize = Math.max(startWidth*-1,Math.round((event.clientX-rigthSide)/step));
+                target.dataset.size = Math.max(1,startWidth+additinalSize);
                 
             }
             var stopResizer = function(event){
@@ -127,7 +128,8 @@
             event.stopImmediatePropagation();
             event.preventDefault();
         }
-    },false)
+    },false);
+    
     
         
     //init rows;
