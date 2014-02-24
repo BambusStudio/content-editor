@@ -1,6 +1,6 @@
 module.exports = function(grunt) {
 
-    
+   var deployFolder = 'content-editor'
     
   // Project configuratasdion.
   grunt.initConfig({ 
@@ -58,6 +58,18 @@ module.exports = function(grunt) {
           dest: 'app/css/app.css'
         },
     },
+    'ftp-deploy': {
+          build: {
+            auth: {
+              host: 'bambuky.ftp.ukraine.com.ua',
+              port: 21,
+              authKey: 'key1'
+            },
+            src: 'app',
+            dest: deployFolder,
+            exclusions: ['app/templates']
+          }
+    },
     browser_sync: {
         files: {
             src : [
@@ -67,26 +79,17 @@ module.exports = function(grunt) {
             ]
         },
         options: {
-        //host: "192.168.0.15",
+            //host: "192.168.0.15",
             reloadFileTypes: ['php', 'html', 'js', 'erb', 'svg'],
             injectFileTypes: ['css', 'png', 'jpg', 'svg', 'gif'],
-            watchTask: true,
+            watchTask: true, 
             debugInfo: true,
-<<<<<<< HEAD
-//            ghostMode: {
-//                //scroll: true,
-//                //links: true,
-//                //forms: true,
-//                //clicks: true
-//            },
-=======
             ghostMode: {
-                //scroll: true,
-                //links: true,
-                //forms: true,
-                //clicks: true
+                scroll: false,
+                links: false,
+                forms: false,
+                clicks: false
             },
->>>>>>> c371778d8aaa59a7f01753a7a1d427dfeccd8223
             open: true,
             server: {
                 baseDir: "",
@@ -100,6 +103,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-browser-sync');
     grunt.loadNpmTasks('grunt-sass');
+    grunt.loadNpmTasks('grunt-ftp-deploy');
     grunt.loadNpmTasks('grunt-autoprefixer');
     
     grunt.event.on('watch', function(action, filepath, target) {
@@ -107,7 +111,7 @@ module.exports = function(grunt) {
         grunt.config.set('_myFile', filepath.replace(/\\/g,'/'));
         console.log(filepath.replace(/\\/g,'/'))
     });
-    
+ 
      
     // Default task(s).
     grunt.registerTask('default', ['browser_sync','sass','watch']);
