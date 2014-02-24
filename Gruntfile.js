@@ -73,10 +73,10 @@ module.exports = function(grunt) {
             watchTask: true,
             debugInfo: true,
             ghostMode: {
-                scroll: true,
-                links: true,
-                forms: true,
-                clicks: true
+                //scroll: true,
+                //links: true,
+                //forms: true,
+                //clicks: true
             },
             open: true,
             server: {
