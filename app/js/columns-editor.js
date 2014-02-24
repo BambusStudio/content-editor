@@ -21,14 +21,6 @@ Editor.prototype={
             if (event.target.classList.contains('row-add')) {
                this.createRow();
             }
-            if (event.target.classList.contains('column-content') && !event.target.classList.contains('cke_editable')) {
-                event.preventDefault();
-                CKEDITOR.inline( event.target,{
-                    toolbar: 'Basic',
-                    uiColor: '#9AB8F3'
-                });
-                //CKEDITOR.replace(event.target);
-            }
             // remove Col;
             if (event.target.classList.contains('row-remove')) {
                 col = event.target.parentElement;
@@ -45,12 +37,13 @@ Editor.prototype={
             }
         }.bind(this), false);
         //column resize
+
         this.el.addEventListener('mousedown', function (event) {
             // resize target;
             var target = event.target.parentElement;
 
             if (event.target.classList.contains('column-content')  ) {
-                event.preventDefault();
+                //event.preventDefault();
                 event.stopImmediatePropagation();
             }
             if (event.target.classList.contains('column-resize')) {
@@ -79,24 +72,35 @@ Editor.prototype={
     createCol:function(data) {
         var col = document.createElement('div'),
             colContent = document.createElement('div'),
+            colMove = document.createElement('div'),
             colRemove = document.createElement('div'),
             colResize = document.createElement('div'),
             data = data||{size:this.colMinSize,content:'<p>text</p>'};
         col.className = 'editor-column';
         col.dataset.size = data.size;
+
         colContent.className = 'column-content';
         colContent.setAttribute('contenteditable', 'true');
+        colContent.innerHTML = data.content;
+
+        CKEDITOR.inline( colContent,{toolbar: 'Basic',uiColor: '#9AB8F3'});
+
+        colMove.className = 'column-move';
         colRemove.className = 'column-remove';
         colResize.className = 'column-resize';
-        colContent.innerHTML = data.content;
+
+        col.appendChild(colMove);
         col.appendChild(colContent);
         col.appendChild(colResize);
         col.appendChild(colRemove);
+
+
         return col;
     },
     initColumns: function(row) {
         return new Sortable(row, {
             group: 'column',
+            handle: '.column-remove',
             draggable: ".editor-column",
             ghostClass: "sortable-ghost"
         });

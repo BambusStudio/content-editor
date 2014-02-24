@@ -72,12 +72,12 @@ module.exports = function(grunt) {
             injectFileTypes: ['css', 'png', 'jpg', 'svg', 'gif'],
             watchTask: true,
             debugInfo: true,
-            ghostMode: {
-                //scroll: true,
-                //links: true,
-                //forms: true,
-                //clicks: true
-            },
+//            ghostMode: {
+//                //scroll: true,
+//                //links: true,
+//                //forms: true,
+//                //clicks: true
+//            },
             open: true,
             server: {
                 baseDir: "",
