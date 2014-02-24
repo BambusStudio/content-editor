@@ -112,7 +112,22 @@
             opacity: 0;
             transition: opacity .3s;
         }
+<<<<<<< HEAD
 
+=======
+        &[data-size="1"] {width: 8.33333%;}
+        &[data-size="2"] {width: 16.66667%;}
+        &[data-size="3"] {width: 25%;}
+        &[data-size="4"] {width: 33.33333%;}
+        &[data-size="5"] {width: 41.66667%;}
+        &[data-size="6"] {width: 50%;}
+        &[data-size="7"] {width: 58.33333%;}
+        &[data-size="8"] {width: 66.66667%;}
+        &[data-size="9"] {width: 75%;}
+        &[data-size="10"] {width: 83.33333%;}
+        &[data-size="11"] {width: 91.66667%;}
+        &[data-size="12"] {width: 100%;}
+>>>>>>> c371778d8aaa59a7f01753a7a1d427dfeccd8223
     }
     .column-add{ 
         position: absolute;
