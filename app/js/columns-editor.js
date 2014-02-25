@@ -2,10 +2,8 @@
 var Editor = function(el){
     this.el = el;
     this.colMinSize = 1;
-
+    this.currentBreakpoint = 'large';
     this.editorSettings={
-      
-       
         uiColor: '#9AB8F3'
     }
     //init rows;
@@ -42,12 +40,10 @@ Editor.prototype={
                 col.parentElement.removeChild(col);
             }
         }.bind(this), false);
-        
         //column resize
         this.el.addEventListener('mousedown', function (event) {
             // resize target;
             var target = event.target.parentElement;
-
             if (event.target.classList.contains('column-content')  ) {
                 //event.preventDefault();
                 event.stopImmediatePropagation();
@@ -55,15 +51,16 @@ Editor.prototype={
             if (event.target.classList.contains('column-resize')) {
                 var startPoint = event.clientX,
                     step = this.el.querySelector('.editor-row').clientWidth / 12,
-                    startWidth = Number(target.dataset.size || 1),
+                    startWidth = Number(target.dataset[this.currentBreakpoint] || 1),
                     rigthSide = target.getClientRects()[0].right,
                     resizer = function (event) {
                         //return with limited to inverted size of targetso it can't be scaled in negaivesize.
                         //Set step to 50px
                         var additinalSize = Math.max(startWidth * -1, Math.round((event.clientX - rigthSide) / step));
-                        target.dataset.size = Math.max(1, startWidth + additinalSize);
+                        console.log()
+                        target.dataset[this.currentBreakpoint] = Math.max(1, startWidth + additinalSize);
 
-                    },
+                    }.bind(this),
                     stopResizer = function (event) {
                         window.removeEventListener('mousemove', resizer, false);
                         window.removeEventListener('mousemove', stopResizer, false);
@@ -73,15 +70,7 @@ Editor.prototype={
                 event.stopImmediatePropagation();
                 event.preventDefault();
             }
-        }.bind(this), false);
-        
-        //prevent draging whjile text editor works
-//        this.el.addEventListener('dragstart',function(){
-//            if(!event.target.classList.contains('editor-column')){
-//                event.preventDefault();
-//            }
-//        },true)
-                
+        }.bind(this), false);             
 
     },
     createCol:function(data) {
@@ -90,14 +79,16 @@ Editor.prototype={
             colHandle = document.createElement('div'),
             colRemove = document.createElement('div'),
             colResize = document.createElement('div'),
-            data = data||{size:this.colMinSize,content:'<p>text</p>'};
+            data = data||{size:this.colMinSize,content:'<p></p>'};
         col.className = 'editor-column';
-        col.dataset.size = data.size;
+        col.dataset.large = data.large||1;
+        col.dataset.medium = data.medium||1;
+        col.dataset.small = data.small||1;
 
         colContent.className = 'column-content';
         colContent.setAttribute('contenteditable', 'true');
         colContent.innerHTML = data.content;
-        CKEDITOR.inline( colContent,this.editorSettings);
+        CKEDITOR.inline(colContent,this.editorSettings);
         col.addEventListener('dragend',function(){
             this.removeAttribute('draggable')
         },false)
@@ -127,14 +118,23 @@ Editor.prototype={
         var row = document.createElement('div'),
             rowHandle = document.createElement('div'),
             rowAdd = document.createElement('div'),
-            rowRemove = document.createElement('div');
+            rowRemove = document.createElement('div'),
+            rowCollapse = document.createElement('input');
+        
         row.className = 'editor-row';
         rowHandle.className = 'row-handle';
         rowAdd.className = 'column-add';
         rowRemove.className = 'row-remove';
+        
+        rowCollapse.setAttribute('type','checkbox');
+        rowCollapse.value=1;
+        if(data&&data.collapsed){
+            rowCollapse.setAttribute('checked','checked');    
+        }
+        row.appendChild(rowCollapse);
         row.appendChild(rowHandle);
         if(data){//build few columns from JSON
-            [].forEach.call(data,function(column){
+            [].forEach.call(data.columns,function(column){
                 row.appendChild(this.createCol(column));
             }.bind(this))
         }else{//build new column
@@ -142,57 +142,66 @@ Editor.prototype={
         }
         row.appendChild(rowAdd);
         row.appendChild(rowRemove);
+        
         this.initColumns(row);
         this.el.insertBefore(row, this.el.getElementsByClassName('row-add')[0]);
     },
-    serialize: function() {
-        event.preventDefault();
-        var rows = this.el.querySelectorAll('.editor-row'),
-            contentSerialized = [];
-        [].forEach.call(rows, function (row) {
-            var rowSerialized = [];
+    serialize: function(json) {
+        var contentSerialized = [];
+        [].forEach.call(this.el.querySelectorAll('.editor-row'), function (row) {
+            var rowSerialized = {
+                collapsed:row.querySelector('input').checked,
+                columns:[]
+            };
             [].forEach.call(row.querySelectorAll('.editor-column'), function (col) {
                 var columnSerialized = {
                     content: col.getElementsByClassName('column-content')[0].innerHTML,
-                    size: col.dataset.size
+                    large: col.dataset.large||1,
+                    medium: col.dataset.medium||col.dataset.large||1,
+                    small: col.dataset.small||col.dataset.medium||col.dataset.large||1
                 };
-                rowSerialized.push(columnSerialized);
+                rowSerialized.columns.push(columnSerialized);
             });
             contentSerialized.push(rowSerialized);
         });
-        document.getElementById('console').value = JSON.stringify(contentSerialized);
+        if(json){
+           return contentSerialized;  
+        }else{
+            document.getElementById('console').value = JSON.stringify(contentSerialized);
+        }
     },
-    buildFromSerialized:function(_data){
-        event.preventDefault();
-        var data;
-
-        try{data = JSON.parse(_data)}
-        catch(error){console.error(error)}
-
-        [].forEach.call(data, function (row) {
-            console.log(row)
+    buildFromSerialized:function(data){
+        [].forEach.call(JSON.parse(data), function (row) {
             this.createRow(row);
-//            var rowSerialized = [];
-//            [].forEach.call(row.querySelectorAll('.editor-column'), function (col) {
-//                var columnSerialized = {
-//                    content: col.getElementsByClassName('column-content')[0].innerHTML,
-//                    size: col.dataset.size
-//                };
-//                rowSerialized.push(columnSerialized);
-//            });
-//            contentSerialized.push(rowSerialized);
         }.bind(this));
-    }
+    },
+    renderTo:function(target){
+        var html='';
+        
+        [].forEach.call(this.serialize(true), function (row) {
+            html+='<div class="row '+((row.collapsed)?'collapse':'')+'">';
+            [].forEach.call(row.columns, function (column) {
+                html +='<div class="columns'
+                     +((column.large)?' large-'+column.size:'')
+                     +((column.medium)?' medium-'+column.medium:'')
+                     +((column.small)?' small-'+column.small:'')
+                     +'">';
+                html+=column.content;
+                html+='</div>';
+            }.bind(this));
+            html+='</div>';
+        }.bind(this));
+        target.innerHTML =html;
+    },
+    changeBreakpoint:function(breakpoint){
+        this.currentBreakpoint=breakpoint;
+        this.el.classList.remove('break-small','break-medium','break-large')    
+        this.el.classList.add('break-'+breakpoint);
+    },
 }
 
 var editor = new Editor(document.getElementById('editor'));
 
-
-
-
-
-
-Ми невпинно працюємо над побудовою ефективних і раціональних процесів, що знижують вплив на довкілля. Екологічна складова знаходить відображення в нашій товарній політиці, у наших логістичних планах, в інженерних, програмних та технологічних рішеннях. Ми реалізовуємо принципи захисту довкілля у всіх напрямках діяльності: на нафтобазах та автозаправних комплексах, в наших офісах, у публічних заходах та комунікаціях з партнерами та клієнтами Компанії.
 
 
 

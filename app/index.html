@@ -14,24 +14,50 @@
 </head>
 <body> 
 <!--.editor-column*5>.column-content{1.$}+.column-remove-->
-<div id="editor">
+<br><br>
+<form action="">
+    <fieldset>
+        <legend>breakpoint</legend>
+        <input type="radio" value="large" name="breakpoint" id="large" checked><label for="large">large </label><br>
+        <input type="radio" value="medium" name="breakpoint" id="medium"><label for="medium">medium </label><br>
+        <input type="radio" value="small" name="breakpoint" id="small"><label for="small">small </label>
+    </fieldset>
+</form>
+   <br><br> 
+<div id="editor" class="break-large">
     <div class="row-add"></div>
 </div>
 
-<!--
 <form>
     <textarea style="border:red solid; padding:8px; min-height:100px; margin-top:150px; width:100%" id="console" name="console"></textarea>
     <button name="serialize">serialize</button>
     <button name="build">build</button>
+    <button name="render">render</button>
 </form>
--->
+<div id="content"></div>
 <script src="app/js/columns-editor.js"></script>
-<!--
 <script>
+    document.forms[0].onchange=function(){
+        for(var button in document.forms[0].breakpoint){
+            if(document.forms[0].breakpoint[button].checked){
+                var selected = document.forms[0].breakpoint[button].value;
+            }
+        }
+        editor.changeBreakpoint(selected);
+    };
+    document.forms[1].serialize.onclick=function(){
+        event.preventDefault(); 
+        editor.serialize()
+    };
+    document.forms[1].build.onclick=function(){
+        event.preventDefault();
+        editor.buildFromSerialized( document.forms[1].console.value);
+    };
+    document.forms[1].render.onclick=function(){
+        event.preventDefault();
+        editor.renderTo(document.getElementById('content'));
+    };
 
-    document.forms[0].serialize.onclick=function(){editor.serialize()};
-    document.forms[0].build.onclick=function(){editor.buildFromSerialized( document.forms[0].console.value)};
 </script>
--->
 </body>
 </html>
