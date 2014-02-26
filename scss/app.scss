@@ -13,13 +13,8 @@
 
 
 /* General Elements */
-@import 'general/images'; 
 @import 'general/content';
-@import 'general/elements';
-@import 'general/layout/header';
-@import 'general/layout/body';
-@import 'general/layout/footer';
 
 
 /* Pages */
-@import 'pages/home/app';
+@import 'general/_editor';

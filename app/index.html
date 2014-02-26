@@ -8,13 +8,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title>Content-editor</title> 
     <link rel="stylesheet" href="app/css/app.css">
-    <script src="../bower_components/modernizr/modernizr.js"></script>
-    <script src="../bower_components/Sortable/Sortable.js"></script>
     <script src="../bower_components/ckeditor/ckeditor.js"></script>
+    <script src="app/js/build.min.js"></script>
+
 </head>
 <body> 
-<!--.editor-column*5>.column-content{1.$}+.column-remove-->
-<br><br>
+<br>
+<br>
+
 <form action="">
     <fieldset>
         <legend>breakpoint</legend>
@@ -23,10 +24,11 @@
         <input type="radio" value="small" name="breakpoint" id="small"><label for="small">small </label>
     </fieldset>
 </form>
-   <br><br> 
-<div id="editor" class="break-large">
-    <div class="row-add"></div>
-</div>
+
+<br>
+<br> 
+
+<div id="holder"></div>
 
 <form>
     <textarea style="border:red solid; padding:8px; min-height:100px; margin-top:150px; width:100%" id="console" name="console"></textarea>
@@ -35,8 +37,9 @@
     <button name="render">render</button>
 </form>
 <div id="content"></div>
-<script src="app/js/columns-editor.js"></script>
 <script>
+    var editor = new ResponsiveEditor(document.getElementById('holder'));
+    
     document.forms[0].onchange=function(){
         for(var button in document.forms[0].breakpoint){
             if(document.forms[0].breakpoint[button].checked){
