@@ -14,6 +14,10 @@ module.exports = function(grunt) {
             files: ['scss/**/*.scss'],
             tasks: ['sass:dist']
         },
+        js: {
+            files: ['app/js/responsive-editor.js'],
+            tasks: ['uglify']
+        },
         css: {
             files: ['temp/_app.css'],
             tasks: ['autoprefixer']
@@ -74,7 +78,7 @@ module.exports = function(grunt) {
         files: {
             src : [
                 'app/index.html',
-                'app/js/**/*.js',
+                'app/js/build.min.js',
                 'app/css/app.css'
             ]
         },
@@ -96,6 +100,17 @@ module.exports = function(grunt) {
                 index: "app/index.html"
             }
         }
+    },
+    uglify: {
+        my_target: {
+            files: {
+                'app/js/build.min.js': 
+                [
+                    'bower_components/Sortable/Sortable.js',
+                    'app/js/responsive-editor.js'
+                ]
+            }
+        }
     }
   });
  
@@ -104,6 +119,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-browser-sync');
     grunt.loadNpmTasks('grunt-sass');
     grunt.loadNpmTasks('grunt-ftp-deploy');
+    grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-autoprefixer');
     
     grunt.event.on('watch', function(action, filepath, target) {
